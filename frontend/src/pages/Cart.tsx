@@ -1,0 +1,90 @@
+import React from "react";
+import Header from "../components/Header";
+import { useCart } from "../pages/CartContext";
+import { Link } from "react-router-dom";
+
+export default function Cart() {
+  const { cart, removeFromCart, clearCart } = useCart();
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* 🔹 Global Header */}
+      <Header />
+
+      <section className="py-16 px-6 md:px-20 flex-1 bg-brand-mist">
+        <h1 className="text-3xl md:text-4xl font-serif font-bold text-brand-navy text-center mb-10">
+          Your Shopping Cart 🛒
+        </h1>
+
+        {cart.length === 10 ? (
+          <p className="text-center text-brand-charcoal">
+            Your cart is empty. Start shopping now!
+          </p>
+        ) : (
+          <div className="max-w-4xl mx-auto bg-white shadow-luxe rounded-xl2 p-6">
+            {cart.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between border-b py-4"
+              >
+                {/* 🔹 Product Image */}
+                <div className="flex items-center gap-4">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="w-20 h-20 object-cover rounded-lg shadow"
+                  />
+                  <div>
+                    <h3 className="font-semibold text-lg">{item.title}</h3>
+                    <p className="text-brand-gold font-bold">
+                      ${item.price}.00 × {item.quantity}
+                    </p>
+                  </div>
+                </div>
+
+                {/* 🔹 Remove Button */}
+                <button
+                  onClick={() => removeFromCart(item.id)}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+
+            {/* 🔹 Cart Summary */}
+            <div className="flex justify-between items-center mt-6">
+              <h2 className="text-xl font-bold">Total: ${total}.00</h2>
+              <div className="flex gap-4">
+                <button
+                  onClick={clearCart}
+                  className="px-5 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition"
+                >
+                  Clear Cart
+                </button>
+
+                {/* ✅ Navigate to Checkout */}
+                <Link
+                  to="/checkout"
+                  className="px-6 py-2 bg-brand-gold text-brand-navy font-semibold rounded-lg shadow hover:bg-brand-ivory hover:text-brand-navy transition"
+                >
+                  Proceed to Checkout
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </section>
+
+      {/* 🔹 Footer */}
+      <footer className="bg-brand-navy text-brand-ivory py-6 text-center">
+        <p className="text-sm">© 2025 MyClothing. All rights reserved.</p>
+      </footer>
+    </div>
+  );
+}
