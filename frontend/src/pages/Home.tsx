@@ -1,7 +1,15 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import Header from "../components/Header";
 
 export default function Home() {
+  const categories = [
+    { title: "Women", img: "https://picsum.photos/id/1011/600/800", link: "/women" },
+    { title: "Men", img: "https://picsum.photos/id/1012/600/800", link: "/men" },
+    { title: "Accessories", img: "https://picsum.photos/id/1013/600/800", link: "/accessories" },
+    { title: "Jewelry", img: "https://picsum.photos/id/1014/600/800", link: "/jewelry" },
+  ];
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* 🔹 Global Header */}
@@ -29,18 +37,17 @@ export default function Home() {
           Featured Collections
         </h2>
         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-8">
-          {[
-            { title: "Women", img: "https://picsum.photos/id/1011/600/800" },
-            { title: "Men", img: "https://picsum.photos/id/1012/600/800" },
-            { title: "Accessories", img: "https://picsum.photos/id/1013/600/800" },
-            { title: "Jewelry", img: "https://picsum.photos/id/1014/600/800" },
-          ].map((item, i) => (
-            <div key={i} className="rounded-xl2 overflow-hidden shadow-luxe hover:scale-105 transition">
+          {categories.map((item, i) => (
+            <Link
+              to={item.link}
+              key={i}
+              className="rounded-xl2 overflow-hidden shadow-luxe hover:scale-105 transition block"
+            >
               <img src={item.img} alt={item.title} className="w-full h-72 object-cover" />
               <h3 className="text-xl font-semibold text-center py-4 text-brand-charcoal">
                 {item.title}
               </h3>
-            </div>
+            </Link>
           ))}
         </div>
       </section>
@@ -53,7 +60,11 @@ export default function Home() {
         <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8">
           {[1, 2, 3, 4].map((id) => (
             <div key={id} className="bg-white rounded-xl2 shadow-luxe overflow-hidden">
-              <img src={`https://picsum.photos/id/10${id}/400/400`} alt="Product" className="w-full h-56 object-cover" />
+              <img
+                src={`https://picsum.photos/id/10${id}/400/400`}
+                alt="Product"
+                className="w-full h-56 object-cover"
+              />
               <div className="p-4">
                 <h3 className="font-semibold text-lg">Product {id}</h3>
                 <p className="text-brand-gold font-bold mt-2">$99.00</p>
@@ -124,7 +135,9 @@ export default function Home() {
             </ul>
           </div>
         </div>
-        <p className="text-center text-sm mt-6">© 2025 MyClothing. All rights reserved.</p>
+        <p className="text-center text-sm mt-6">
+          © 2025 MyClothing. All rights reserved.
+        </p>
       </footer>
     </div>
   );

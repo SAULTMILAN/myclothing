@@ -9,10 +9,10 @@ export default function Signature() {
   const { addToWishlist } = useWishlist();
 
   const products = [
-    { id: 1, title: "Royal Velvet Gown", price: 599, img: "/assets/images/Royal_velvet.jpg" },
-    { id: 2, title: "Embroidered Sherwani", price: 749, img: "/assets/images/Emb_sherwani.jpg" },
-    { id: 3, title: "Gold-Trimmed Saree", price: 499, img: "/assets/images/gold_saree.jpg" },
-    { id: 4, title: "Diamond Accent Jewelry", price: 999, img: "/assets/images/diamond_jwl.jpg" },
+    { id: 1, title: "Royal Designer Suit", price: 799, img: "/assets/images/signature_suit.jpg" },
+    { id: 2, title: "Luxury Evening Gown", price: 899, img: "/assets/images/signature_gown.jpg" },
+    { id: 3, title: "Premium Saree", price: 699, img: "/assets/images/signature_saree.jpg" },
+    { id: 4, title: "Exclusive Sherwani", price: 999, img: "/assets/images/signature_sherwani.jpg" },
   ];
 
   return (
@@ -21,43 +21,45 @@ export default function Signature() {
       <Header />
 
       {/* 🔹 Hero Section */}
-      <section
-        className="relative h-[60vh] bg-cover bg-center flex items-center justify-center"
-        style={{ backgroundImage: "url('/assets/images/Sig_srs.jpg')" }}
-      >
-        <div className="absolute inset-0 bg-black/40"></div>
-        <h1 className="relative text-5xl md:text-6xl font-serif font-bold text-white z-10 drop-shadow-lg">
-          The Signature Series
+      <section className="py-20 text-center bg-gradient-to-b from-brand-gold/20 to-white">
+        <h1 className="text-5xl md:text-6xl font-serif font-bold text-brand-navy mb-4">
+          The Signature Collection
         </h1>
+        <p className="text-lg text-brand-charcoal/80 max-w-2xl mx-auto">
+          Handpicked luxury pieces that define sophistication and timeless elegance.
+        </p>
       </section>
 
-      {/* 🔹 Signature Collection */}
-      <section className="py-16 px-6 md:px-20 bg-brand-mist flex-1">
-        <h2 className="text-3xl font-serif font-bold text-brand-navy text-center">
-          Crafted for the Elite
+      {/* 🔹 Product Grid */}
+      <section className="px-6 md:px-20 py-16 bg-brand-mist flex-1">
+        <h2 className="text-3xl font-bold text-center text-brand-navy mb-10">
+          Exclusive Signature Styles
         </h2>
-        <p className="text-center mt-2 text-brand-charcoal/80 max-w-2xl mx-auto">
-          Our Signature Series combines timeless design, luxury fabrics, and
-          unparalleled craftsmanship — curated for those who demand the best.
-        </p>
 
-        <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
           {products.map((item) => (
             <div
               key={item.id}
               className="bg-white rounded-xl2 shadow-luxe overflow-hidden hover:scale-105 transition"
             >
-              <img src={item.img} alt={item.title} className="w-full h-64 object-cover" />
-              <div className="p-4">
+              {/* Product Image */}
+              <img
+                src={item.img}
+                alt={item.title}
+                className="w-full h-64 object-cover"
+              />
+
+              {/* Product Info */}
+              <div className="p-4 text-center">
                 <h3 className="font-semibold text-lg">{item.title}</h3>
                 <p className="text-brand-gold font-bold mt-2">${item.price}.00</p>
 
                 {/* ✅ Buttons Row */}
-                <div className="flex gap-3 mt-4">
+                <div className="flex justify-center gap-3 mt-4">
                   {/* 🛒 Add to Cart */}
                   <button
                     onClick={() => addToCart(item)}
-                    className="flex-1 py-2 rounded-lg bg-brand-navy text-white hover:bg-brand-gold hover:text-brand-charcoal transition"
+                    className="flex-1 py-2 px-4 rounded-lg bg-brand-navy text-white hover:bg-brand-gold hover:text-brand-charcoal transition"
                   >
                     Add to Cart
                   </button>
@@ -65,31 +67,15 @@ export default function Signature() {
                   {/* ❤️ Add to Wishlist */}
                   <button
                     onClick={() => addToWishlist(item)}
-                    className="p-2 rounded-full border border-brand-gold hover:bg-brand-gold hover:text-white transition"
+                    className="px-4 py-2 rounded-lg border border-brand-gold text-brand-navy hover:bg-brand-gold hover:text-white transition"
                   >
-                    <FaHeart className="text-pink-500" />
+                    <FaHeart />
                   </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
-      </section>
-
-      {/* 🔹 Exclusive Invitation */}
-      <section className="bg-brand-navy text-brand-ivory py-20 text-center">
-        <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
-          An Invitation to Elegance
-        </h2>
-        <p className="text-lg mb-6">
-          Become part of the <span className="text-brand-gold font-bold">Signature Club</span> for early access, exclusive offers, and personalized styling.
-        </p>
-        <a
-          href="/signup"
-          className="px-8 py-3 bg-brand-gold text-brand-navy font-semibold rounded-xl2 shadow-luxe hover:bg-brand-ivory hover:text-brand-navy transition"
-        >
-          Join the Club
-        </a>
       </section>
 
       {/* 🔹 Footer */}

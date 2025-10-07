@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 type CartItem = {
   id: number;
@@ -18,38 +19,47 @@ type CartContextType = {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // ✅ Get current user
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const storageKey = user ? `cart_${user.email}` : "cart_guest";
+  const [cart, setCart] = useState<CartItem[]>([]);
 
-  // ✅ Load cart from localStorage
-  const [cart, setCart] = useState<CartItem[]>(() => {
-    const saved = localStorage.getItem(storageKey);
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // ✅ Save cart to localStorage whenever it changes
+  // ✅ Fetch cart from backend
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(cart));
-  }, [cart, storageKey]);
+    axios.get("http://localhost:5000/api/cart")
+      .then(res => setCart(res.data))
+      .catch(err => console.error(err));
+  }, []);
 
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
-    setCart((prev) => {
-      const existing = prev.find((p) => p.id === item.id);
-      if (existing) {
-        return prev.map((p) =>
-          p.id === item.id ? { ...p, quantity: p.quantity + 1 } : p
-        );
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
+  const addToCart = async (item: Omit<CartItem, "quantity">) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/cart/add", item, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setCart(res.data); // update with backend response
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const removeFromCart = (id: number) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
+  const removeFromCart = async (id: number) => {
+    try {
+      const res = await axios.delete(`http://localhost:5000/api/cart/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setCart(res.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const clearCart = () => setCart([]);
+  const clearCart = async () => {
+    try {
+      await axios.delete("http://localhost:5000/api/cart/clear", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setCart([]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart }}>

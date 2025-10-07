@@ -1,18 +1,18 @@
 import React from "react";
 import Header from "../components/Header";
-import { useCart } from "../pages/CartContext"; // ✅ Cart Context
+import { useCart } from "../pages/CartContext";   // ✅ Cart Context
 import { useWishlist } from "../pages/WishlistContext"; // ✅ Wishlist Context
-import { FaHeart } from "react-icons/fa"; // ✅ Icon for wishlist
+import { FaHeart } from "react-icons/fa";         // ✅ Wishlist Icon
 
 export default function Men() {
   const { addToCart } = useCart();
-  const { addToWishlist } = useWishlist(); // ✅ Get wishlist function
+  const { addToWishlist } = useWishlist();
 
   const products = [
     { id: 1, title: "Jackets", price: 100, img: "/assets/images/Jackets.jpg" },
     { id: 2, title: "Jeans", price: 50, img: "/assets/images/Jeans.jpg" },
     { id: 3, title: "Shirts", price: 40, img: "/assets/images/Shirts.jpg" },
-    { id: 4, title: "T Shirts", price: 35, img: "/assets/images/T-Shirts.jpg" },
+    { id: 4, title: "T-Shirts", price: 35, img: "/assets/images/T-Shirts.jpg" },
   ];
 
   return (
@@ -21,10 +21,13 @@ export default function Men() {
       <Header />
 
       {/* 🔹 Hero Section */}
-      <section className="py-16 text-center bg-gradient-to-b from-brand-mist to-white">
-        <h1 className="text-5xl md:text-6xl font-serif font-bold text-brand-navy mb-6">
-          Shop Men
+      <section className="py-20 text-center bg-gradient-to-b from-brand-mist to-white">
+        <h1 className="text-5xl md:text-6xl font-serif font-bold text-brand-navy mb-4">
+          Men’s Royal Collection
         </h1>
+        <p className="text-lg text-brand-charcoal/80 max-w-2xl mx-auto">
+          Explore premium men’s wear — crafted for comfort, designed for elegance.
+        </p>
       </section>
 
       {/* 🔹 Product Grid */}
@@ -47,18 +50,18 @@ export default function Men() {
               />
 
               {/* Product Details */}
-              <div className="p-4">
+              <div className="p-4 text-center">
                 <h3 className="font-semibold text-lg">{item.title}</h3>
                 <p className="text-brand-gold font-bold mt-2">
                   ${item.price}.00
                 </p>
 
                 {/* Buttons */}
-                <div className="flex justify-between items-center gap-3 mt-4">
+                <div className="flex justify-center gap-3 mt-4">
                   {/* 🛒 Add to Cart */}
                   <button
                     onClick={() => addToCart(item)}
-                    className="flex-1 py-2 rounded-lg bg-brand-navy text-white hover:bg-brand-gold hover:text-brand-charcoal transition"
+                    className="flex-1 py-2 px-4 rounded-lg bg-brand-navy text-white hover:bg-brand-gold hover:text-brand-charcoal transition"
                   >
                     Add to Cart
                   </button>
@@ -66,9 +69,9 @@ export default function Men() {
                   {/* ❤️ Add to Wishlist */}
                   <button
                     onClick={() => addToWishlist(item)}
-                    className="p-2 rounded-full border border-brand-gold hover:bg-brand-gold hover:text-white transition"
+                    className="px-4 py-2 rounded-lg border border-brand-gold text-brand-navy hover:bg-brand-gold hover:text-white transition"
                   >
-                    <FaHeart className="text-pink-500" />
+                    <FaHeart />
                   </button>
                 </div>
               </div>

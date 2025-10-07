@@ -70,7 +70,7 @@ export default function Discover() {
                 <p className="text-brand-gold font-bold mt-3">${item.price}.00</p>
 
                 {/* ✅ Buttons Row */}
-                <div className="flex gap-3 mt-4">
+                <div className="flex justify-between gap-3 mt-4">
                   {/* 🛒 Add to Cart */}
                   <button
                     onClick={() => addToCart(item)}

@@ -1,53 +1,39 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Header from "../components/Header";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-    // ✅ Simulated user login
-    const user = { email };
-    localStorage.setItem("user", JSON.stringify(user));
+    try {
+      // ✅ Send login request to backend
+      const res = await axios.post("http://localhost:5000/api/auth/login", {
+        email,
+        password,
+      });
 
-    // ✅ Keys for logged-in user
-    const userCartKey = `cart_${email}`;
-    const userWishlistKey = `wishlist_${email}`;
+      // ✅ Save JWT token + user info in localStorage
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
 
-    // ✅ Merge guest cart → user cart
-    const guestCart = JSON.parse(localStorage.getItem("cart_guest") || "[]");
-    const existingCart = JSON.parse(localStorage.getItem(userCartKey) || "[]");
-    const mergedCart = [...existingCart];
-
-    guestCart.forEach((guestItem: any) => {
-      const found = mergedCart.find((item: any) => item.id === guestItem.id);
-      if (found) {
-        found.quantity += guestItem.quantity;
-      } else {
-        mergedCart.push(guestItem);
-      }
-    });
-    localStorage.setItem(userCartKey, JSON.stringify(mergedCart));
-    localStorage.removeItem("cart_guest");
-
-    // ✅ Merge guest wishlist → user wishlist
-    const guestWishlist = JSON.parse(localStorage.getItem("wishlist_guest") || "[]");
-    const existingWishlist = JSON.parse(localStorage.getItem(userWishlistKey) || "[]");
-    const mergedWishlist = [
-      ...existingWishlist,
-      ...guestWishlist.filter(
-        (guestItem: any) => !existingWishlist.find((item: any) => item.id === guestItem.id)
-      ),
-    ];
-    localStorage.setItem(userWishlistKey, JSON.stringify(mergedWishlist));
-    localStorage.removeItem("wishlist_guest");
-
-    alert("Login Successful 🎉");
-    navigate("/"); // redirect to home
+      alert("Login Successful 🎉");
+      navigate("/"); // redirect to home
+    } catch (err: any) {
+      console.error(err);
+      setError(err.response?.data?.message || "Invalid email or password ❌");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -56,7 +42,14 @@ export default function Login() {
 
       <section className="flex flex-1 items-center justify-center bg-brand-mist px-6">
         <div className="bg-white shadow-luxe rounded-xl2 p-8 w-full max-w-md">
-          <h1 className="text-3xl font-bold text-center text-brand-navy mb-6">Login</h1>
+          <h1 className="text-3xl font-bold text-center text-brand-navy mb-6">
+            Login
+          </h1>
+
+          {error && (
+            <p className="text-red-600 text-center mb-4">{error}</p>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <input
               type="email"
@@ -74,13 +67,16 @@ export default function Login() {
               className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-brand-gold focus:outline-none"
               required
             />
+
             <button
               type="submit"
-              className="w-full py-2 bg-brand-navy text-white rounded-lg hover:bg-brand-gold hover:text-brand-charcoal transition"
+              disabled={loading}
+              className="w-full py-2 bg-brand-navy text-white rounded-lg hover:bg-brand-gold hover:text-brand-charcoal transition disabled:opacity-50"
             >
-              Login
+              {loading ? "Logging in..." : "Login"}
             </button>
           </form>
+
           <p className="text-sm text-center text-gray-600 mt-4">
             Don’t have an account?{" "}
             <a href="/signup" className="text-brand-gold hover:underline">

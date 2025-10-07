@@ -23,6 +23,11 @@ import OrderStatus from "./pages/OrderStatus";
 import Wishlist from "./pages/Wishlist";
 import Login from "./pages/login";
 import Signup from "./pages/signup";
+import CategoryPage from "./pages/categoryPage";
+import Accessories from "./pages/Accessories";
+import Jewelry from "./pages/Jewelry";
+
+
 
 
 export default function App() {
@@ -63,6 +68,9 @@ export default function App() {
             <Route path="/login" element={<Login />} />
 <Route path="/signup" element={<Signup />} />
 <Route path="/login" element={<Login />} />
+ <Route path="/category/:name" element={<CategoryPage />} />
+ <Route path="/accessories" element={<Accessories />} />
+        <Route path="/jewelry" element={<Jewelry />} />
 
 
 

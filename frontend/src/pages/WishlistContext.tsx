@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import axios from "axios";
 
 type WishlistItem = {
   id: number;
@@ -17,33 +18,49 @@ type WishlistContextType = {
 const WishlistContext = createContext<WishlistContextType | undefined>(undefined);
 
 export const WishlistProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // ✅ Get current user
-  const user = JSON.parse(localStorage.getItem("user") || "null");
-  const storageKey = user ? `wishlist_${user.email}` : "wishlist_guest";
+  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
 
-  // ✅ Load wishlist from localStorage
-  const [wishlist, setWishlist] = useState<WishlistItem[]>(() => {
-    const saved = localStorage.getItem(storageKey);
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // ✅ Save wishlist to localStorage when it changes
+  // ✅ Fetch wishlist from backend
   useEffect(() => {
-    localStorage.setItem(storageKey, JSON.stringify(wishlist));
-  }, [wishlist, storageKey]);
+    axios.get("http://localhost:5000/api/wishlist", {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+      .then(res => setWishlist(res.data))
+      .catch(err => console.error(err));
+  }, []);
 
-  const addToWishlist = (item: WishlistItem) => {
-    setWishlist((prev) => {
-      if (prev.find((p) => p.id === item.id)) return prev; // prevent duplicates
-      return [...prev, item];
-    });
+  const addToWishlist = async (item: WishlistItem) => {
+    try {
+      const res = await axios.post("http://localhost:5000/api/wishlist/add", item, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setWishlist(res.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const removeFromWishlist = (id: number) => {
-    setWishlist((prev) => prev.filter((item) => item.id !== id));
+  const removeFromWishlist = async (id: number) => {
+    try {
+      const res = await axios.delete(`http://localhost:5000/api/wishlist/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setWishlist(res.data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
-  const clearWishlist = () => setWishlist([]);
+  const clearWishlist = async () => {
+    try {
+      await axios.delete("http://localhost:5000/api/wishlist/clear", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      });
+      setWishlist([]);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <WishlistContext.Provider value={{ wishlist, addToWishlist, removeFromWishlist, clearWishlist }}>
